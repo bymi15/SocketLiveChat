@@ -50,6 +50,26 @@ $(function(){
         });
     });
 
+    //receive connect message
+    socket.on('connectMessage', function(data){
+        $msg = $('<div class="well" style="word-wrap: break-word;"><strong>[' + data.time + ']</strong> <strong style="color: #00BAD5;">' + data.user + '</strong> has <span style="color: #70E810">connected</span> to the chat</div>');
+        $msg.hide();
+        $chat.append($msg);
+        $msg.show('fast', function(){
+            $chat[0].scrollTop = $chat[0].scrollHeight;
+        });
+    });
+
+    //receive disconnect message
+    socket.on('disconnectMessage', function(data){
+        $msg = $('<div class="well" style="word-wrap: break-word;"><strong>[' + data.time + ']</strong> <strong style="color: #00BAD5;">' + data.user + '</strong> has <span style="color: red">disconnected</span> from the chat</div>');
+        $msg.hide();
+        $chat.append($msg);
+        $msg.show('fast', function(){
+            $chat[0].scrollTop = $chat[0].scrollHeight;
+        });
+    });
+
     //join chat
     $userForm.submit(function(e){
         e.preventDefault();

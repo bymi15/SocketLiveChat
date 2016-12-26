@@ -22,9 +22,11 @@ io.sockets.on('connection', function(socket){
 
     //Disconnect
     socket.on('disconnect', function(data){
+        io.sockets.emit('disconnectMessage', {user: socket.nickname, time: moment().format("h:mm A")});
         users.splice(users.indexOf(socket.nickname), 1);
         updateNicknames();
         connections.splice(connections.indexOf(socket), 1);
+
         console.log('Disconnected: %s sockets connected', connections.length);
     });
 
@@ -40,6 +42,7 @@ io.sockets.on('connection', function(socket){
             socket.nickname = data;
             users.push(socket.nickname);
             updateNicknames();
+            io.sockets.emit('connectMessage', {user: socket.nickname, time: moment().format("h:mm A")});
         }else{
             callback(false);
         }
