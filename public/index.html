@@ -17,23 +17,26 @@
 </head>
 <body>
     <div class="container">
-        <div class="jumbotron">
-            <h1>Socket Live Chat</h1>
+        <div class="jumbotron text-center">
+            <h1 style="color: #00BAD5;">Socket Live Chat</h1>
             <p>Real-time chat with socket.io created by <strong>Brian Min</strong></p>
         </div>
         <div id="userArea" class="row">
-            <div class="col-md-12">
+            <div class="col-sm-12 col-md-8 col-md-offset-2">
                 <form id="userForm">
                     <div class="form-group">
                         <label>Enter nickname:</label>
-                        <input type="text" class="form-control" id="nickname"></textarea>
+                        <input type="text" class="form-control" id="nickname">
                         <br>
-                        <input type="submit" class="btn btn-success" value="Join Chat" />
+                        <input type="submit" class="btn btn-success btn-block" value="Join Chat" />
                     </div>
                 </form>
             </div>
         </div>
         <div id="messageArea" style="display:none;" class="row">
+            <div class="col-md-12">
+                <ul id="channelsTab" class="nav nav-tabs" style="border-bottom:0px;"></ul>
+            </div>
             <div class="col-md-8">
                 <div class="chat pre-scrollable" style="overflow-y: auto; margin-bottom:10px; overflow-x:hidden;" id="chat"></div>
                 <form id="messageForm">
@@ -47,7 +50,7 @@
             </div>
             <div class="col-md-4">
                 <div class="well pre-scrollable" style="overflow-y: auto;">
-                    <h3 style="margin-top: 0;">Online Users</h3>
+                    <h3 style="margin-top: 0;">Online Users <span id="onlineUserCount"></span></h3>
                     <ul class="list-group" id="users">
                     </ul>
                 </div>
