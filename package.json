@@ -1,0 +1,16 @@
+{
+  "name": "socketiochat",
+  "version": "1.0.0",
+  "description": "Real time socket.io chat",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Brian Min",
+  "license": "ISC",
+  "dependencies": {
+    "express": "*",
+    "moment": "^2.17.1",
+    "socket.io": "*"
+  }
+}

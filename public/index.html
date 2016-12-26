@@ -1,0 +1,64 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Socket Live Chat</title>
+    <!--
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">-->
+    <link href="/public/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Socket Live Chat</h1>
+            <p>Real-time chat with socket.io created by <strong>Brian Min</strong></p>
+        </div>
+        <div id="userArea" class="row">
+            <div class="col-md-12">
+                <form id="userForm">
+                    <div class="form-group">
+                        <label>Enter nickname:</label>
+                        <input type="text" class="form-control" id="nickname"></textarea>
+                        <br>
+                        <input type="submit" class="btn btn-success" value="Join Chat" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="messageArea" style="display:none;" class="row">
+            <div class="col-md-8">
+                <div class="chat pre-scrollable" style="overflow-y: auto; margin-bottom:10px; overflow-x:hidden;" id="chat"></div>
+                <form id="messageForm">
+                    <div class="form-group">
+                        <label>Enter message:</label>
+                        <textarea class="form-control" id="message"></textarea>
+                        <br>
+                        <input type="submit" class="btn btn-primary" value="Send Message" />
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <div class="well pre-scrollable" style="overflow-y: auto;">
+                    <h3 style="margin-top: 0;">Online Users</h3>
+                    <ul class="list-group" id="users">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="/public/app.js"></script>
+</body>
+</html>
