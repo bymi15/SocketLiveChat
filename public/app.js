@@ -135,4 +135,30 @@ $(function(){
         });
     });
 
+    //receive chat history
+    socket.on('chathistory', function(data){
+        for (var key in data) {
+            // skip loop if the property is from prototype
+            if (!data.hasOwnProperty(key)) continue;
+
+            var message = data[key];
+            for (var i in message) {
+                // skip loop if the property is from prototype
+                if(!message.hasOwnProperty(i)) continue;
+
+                if(message[i].messageType == 1){ //connect
+                    msg = '<div class="well" style="word-wrap: break-word;"><strong>[' + message[i].time + ']</strong> <strong style="color: #00BAD5;">' + message[i].user + '</strong> has <span style="color: #70E810">connected</span> to the channel</div>';
+                }else if(message[i].messageType == 2){ //disconnect
+                    msg = '<div class="well" style="word-wrap: break-word;"><strong>[' + message[i].time + ']</strong> <strong style="color: #00BAD5;">' + message[i].user + '</strong> has <span style="color: red">disconnected</span> from the channel</div>';
+                }else{
+                    msg = '<div class="well" style="word-wrap: break-word;"><strong>[' + message[i].time + ']</strong> <strong style="color: #00BAD5;">' + message[i].user + '</strong>: ' + message[i].content + '</div>';
+                }
+
+                $chat.append(msg);
+            }
+
+            $chat[0].scrollTop = $chat[0].scrollHeight;
+        }
+    });
+
 });
