@@ -120,6 +120,7 @@ $(function(){
     //receive channel list
     socket.on('setup', function(data){
         currentChannel = data.default;
+        $channelsTab.empty();
         for(i = 0; i < data.channels.length; i++){
             channels[i] = data.channels[i];
             if(data.channels[i] == currentChannel){
