@@ -1,4 +1,4 @@
-$(function(){
+$(function(){ //document ready
 
     var socket = io.connect();
     var $messageForm = $('#messageForm');
@@ -12,6 +12,142 @@ $(function(){
     var $channelsTab = $('#channelsTab');
     var channels = []
     var currentChannel = "General";
+    var nickname;
+
+    var $channelName = $('#channelName');
+    var $passcode = $('#passcode');
+    var $btnPublic = $('#joinPublicChannel');
+    var $btnJoinPrivate = $('#joinPrivateChannel');
+    var $btnCreatePrivate = $('#createPrivateChannel');
+
+    //Join public channel or join/create private channel
+    $nickname.focus();
+    $nickname.keyup(function(e){
+        if($nickname.val().trim() != ''){
+            $btnPublic.attr('disabled', false);
+        }else{
+            $btnPublic.attr('disabled', true);
+        }
+        if($nickname.val().trim() != '' && $channelName.val().trim() != '' && $passcode.val().trim() != ''){
+            $btnJoinPrivate.attr('disabled', false);
+            $btnCreatePrivate.attr('disabled', false);
+        }else{
+            $btnJoinPrivate.attr('disabled', true);
+            $btnCreatePrivate.attr('disabled', true);
+        }
+    });
+    $channelName.keyup(function(e){
+        if($nickname.val().trim() != '' && $channelName.val().trim() != '' && $passcode.val().trim() != ''){
+            $btnJoinPrivate.attr('disabled', false);
+            $btnCreatePrivate.attr('disabled', false);
+        }else{
+            $btnJoinPrivate.attr('disabled', true);
+            $btnCreatePrivate.attr('disabled', true);
+        }
+    });
+    $passcode.keyup(function(e){
+        if($nickname.val().trim() != '' && $channelName.val().trim() != '' && $passcode.val().trim() != ''){
+            $btnJoinPrivate.attr('disabled', false);
+            $btnCreatePrivate.attr('disabled', false);
+        }else{
+            $btnJoinPrivate.attr('disabled', true);
+            $btnCreatePrivate.attr('disabled', true);
+        }
+    });
+    $("#modalJoinPrivate").on('keyup', '#modalJoinPrivate-channelName', function(e){
+        if($("#modalJoinPrivate-channelName").val().trim != '' && $("#modalJoinPrivate-passcode").val().trim() != ''){
+            $("#modalJoinPrivate-joinbtn").attr('disabled', false);
+        }else{
+            $("#modalJoinPrivate-joinbtn").attr('disabled', true);
+        }
+    });
+    $("#modalJoinPrivate").on('keyup', '#modalJoinPrivate-passcode', function(e){
+        if($("#modalJoinPrivate-channelName").val().trim != '' && $("#modalJoinPrivate-passcode").val().trim() != ''){
+            $("#modalJoinPrivate-joinbtn").attr('disabled', false);
+        }else{
+            $("#modalJoinPrivate-joinbtn").attr('disabled', true);
+        }
+    });
+    $("#modalCreatePrivate").on('keyup', '#modalCreatePrivate-channelName', function(e){
+        if($("#modalCreatePrivate-channelName").val().trim != '' && $("#modalCreatePrivate-passcode").val().trim() != ''){
+            $("#modalCreatePrivate-createbtn").attr('disabled', false);
+        }else{
+            $("#modalCreatePrivate-createbtn").attr('disabled', true);
+        }
+    });
+    $("#modalCreatePrivate").on('keyup', '#modalCreatePrivate-passcode', function(e){
+        if($("#modalCreatePrivate-channelName").val().trim != '' && $("#modalCreatePrivate-passcode").val().trim() != ''){
+            $("#modalCreatePrivate-createbtn").attr('disabled', false);
+        }else{
+            $("#modalCreatePrivate-createbtn").attr('disabled', true);
+        }
+    });
+
+
+    $btnJoinPrivate.on('click', function(e){
+        e.preventDefault();
+
+        if($nickname.val().trim() == '' || $channelName.val().trim() == '' || $passcode.val().trim()  == ''){
+            return;
+        }
+        socket.emit('joinPrivateChannel', {nickname: $nickname.val(), channelName: $channelName.val(), passcode: $passcode.val()}, function(noerror, data){
+            if(noerror){
+                nickname = $nickname.val();
+                $userArea.hide();
+                $messageArea.show();
+                $nickname.val('');
+                $channelName.val('');
+                $passcode.val('');
+                showChannelHeader(true);
+                showChannelsTab(false);
+                currentChannel = data.channelName;
+                $('#privateChannelName').append(data.channelName + " <span style='color: white; font-size:14px;'>Hosted by <strong>" + data.creator + "</strong></span>");
+            }else{
+                $userForm.prepend('<div class="alert alert-danger alert-dismissable fade in"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + data + '</div>');
+            }
+        });
+    });
+    $btnCreatePrivate.on('click', function(e){
+        e.preventDefault();
+
+        if($nickname.val().trim() == '' || $channelName.val().trim() == '' || $passcode.val().trim()  == ''){
+            return;
+        }
+        socket.emit('createPrivateChannel', {nickname: $nickname.val(), channelName: $channelName.val(), passcode: $passcode.val()}, function(noerror, data){
+            if(noerror){
+                nickname = $nickname.val();
+                $userArea.hide();
+                $messageArea.show();
+                $nickname.val('');
+                $channelName.val('');
+                $passcode.val('');
+                showChannelHeader(true);
+                showChannelsTab(false);
+                currentChannel = data.channelName;
+                $('#privateChannelName').append(data.channelName + " <span style='color: white; font-size:14px;'>Hosted by <strong>" + data.creator + "</strong></span>");
+            }else{
+                $userForm.prepend('<div class="alert alert-danger alert-dismissable fade in"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + data + '</div>');
+            }
+        });
+    });
+
+    //join public channel chat
+    $btnPublic.on('click', function(e){
+        e.preventDefault();
+        if($nickname.val().trim() == '') return;
+        socket.emit('newUser', $nickname.val(), function(data){
+            if(data){
+                nickname = $nickname.val();
+                $userArea.hide();
+                $messageArea.show();
+                $nickname.val('');
+                showChannelHeader(false);
+                showChannelsTab(true);
+            }else{
+                $userForm.prepend('<div class="alert alert-danger alert-dismissable fade in"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Oops!</strong> the nickname <strong>' + $nickname.val() + '</strong> is taken. Please try a different one.</div>');
+            }
+        });
+    });
 
     //Check connection status
     var checkConnection = setInterval(function() {
@@ -73,21 +209,6 @@ $(function(){
         });
     });
 
-    //join chat
-    $userForm.submit(function(e){
-        e.preventDefault();
-        if($nickname.val().trim() == '') return;
-        socket.emit('newUser', $nickname.val(), function(data){
-            if(data){
-                $userArea.hide();
-                $messageArea.show();
-                $nickname.val('');
-            }else{
-                $userForm.append('<div class="alert alert-danger alert-dismissable fade in"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Oops!</strong> the nickname <strong>' + $nickname.val() + '</strong> is taken. Please try a different one.</div>');
-            }
-        });
-    });
-
     //receive online users information
     socket.on('getUsers', function(data){
         var html = '';
@@ -98,6 +219,59 @@ $(function(){
         $('#onlineUserCount').append('[' + data.length + ']');
         $users.html(html);
     });
+
+    $('#modalJoinPublic').on('click', '#modalJoinPublic-joinbtn', function(e){
+        e.preventDefault();
+        $('#modalJoinPublic').modal('toggle');
+        showChannelHeader(false);
+        showChannelsTab(true);
+        changeChannel('ch-' + $('#dropdownChannel').get(0).selectedIndex);
+    });
+    $('#modalJoinPrivate').on('click', '#modalJoinPrivate-joinbtn', function(e){
+        e.preventDefault();
+        $('#modalJoinPrivate').modal('toggle');
+        showChannelHeader(true);
+        showChannelsTab(false);
+        var channelName = $('#modalJoinPrivate-channelName').val();
+        var passcode = $('#modalJoinPrivate-passcode').val();
+        changeChannelPrivate(channelName, passcode);
+        $('#modalJoinPrivate-channelName').val('');
+        $('#modalJoinPrivate-passcode').val('');
+    });
+    $('#modalCreatePrivate').on('click', 'modalCreatePrivate-createbtn', function(e){
+        e.preventDefault();
+        $('#modalCreatePrivate').modal('toggle');
+        showChannelHeader(false);
+        showChannelsTab(true);
+        var channelName = $('#modalCreatePrivate-channelName').val();
+        var passcode = $('#modalCreatePrivate-passcode').val();
+        changeChannelPrivate(channelName, passcode);
+        ('#modalCreatePrivate-channelName').val('');
+        $('#modalCreatePrivate-passcode').val('');
+    });
+
+    function showChannelsTab(bool){
+        if(bool){
+            $channelsTab.show();
+        }else{
+            $channelsTab.hide();
+        }
+    }
+    function showChannelHeader(bool){
+        if(bool){
+            $('#privateChannelName').show();
+        }else{
+            $('#privateChannelName').hide();
+        }
+    }
+
+    function fillChannelsCombobox(){
+        $('#dropdownChannel').empty();
+        for(i=0; i<channels.length; i++){
+            $('#dropdownChannel').append('<option>' + channels[i] + '</option>');
+        }
+        $('.selectpicker').selectpicker('refresh');
+    }
 
     function changeChannel(ch){
         var id = ch.split("-")[1];
@@ -117,9 +291,34 @@ $(function(){
         $chat.empty();
     }
 
+    function changeChannelPrivate(channelName, passcode){
+        socket.emit('channelPrivate', {
+            nickname: nickname,
+            oldChannel: currentChannel,
+            newChannel: channelName,
+            passcode: passcode
+        });
+    }
+
+    //receive response from server to change private channel
+    socket.on('changeChannelPrivate', function(data){
+        if(data.authorized){
+            socket.emit('switchChannel', {
+                newChannel: data.channelName,
+                oldChannel: currentChannel,
+            });
+            currentChannel = data.channelName;
+            $('#privateChannelName').empty();
+            $('#privateChannelName').append(currentChannel + " <span style='color: white; font-size:14px;'>Hosted by <strong>" + data.creator + "</strong></span>");
+            $chat.empty();
+        }else{
+            $messageArea.prepend('<div class="col-md-12"><div class="alert alert-danger alert-dismissable fade in"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + data.error + '</a></div></div>');
+        }
+    });
+
     //receive channel list
     socket.on('setup', function(data){
-        currentChannel = data.default;
+        currentChannel = data.channel;
         $channelsTab.empty();
         for(i = 0; i < data.channels.length; i++){
             channels[i] = data.channels[i];
@@ -129,6 +328,7 @@ $(function(){
                 $channelsTab.append('<li id="ch-' + i + '"><a href="javascript:void(0)">' + data.channels[i] + '</a></li>');
             }
         }
+        fillChannelsCombobox();
         //set up click event handlers
         $channelsTab.on("click", "li:not(.active)", function(e){
             changeChannel($(this).attr('id'));
@@ -159,6 +359,7 @@ $(function(){
 
             $chat[0].scrollTop = $chat[0].scrollHeight;
         }
+        socket.emit('doneLoadingChat', currentChannel);
     });
 
 });
