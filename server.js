@@ -168,6 +168,19 @@ io.sockets.on('connection', function(socket){
             }
         });
     });
+    //Create and change channel private
+    socket.on('createChangeChannelPrivate', function(data, callback){
+        privateChannelExists(data.newChannel, function(exists){
+            if(!exists){
+                //create the channel
+                createPrivateChannel(data.newChannel, data.passcode, data.nickname);
+                //send response
+                io.in(data.oldChannel).emit('changeChannelPrivate', {authorized: true, channelName: data.newChannel, creator: data.nickname});
+            }else{
+                io.in(data.oldChannel).emit('changeChannelPrivate', {authorized: false, error: '<strong>Oops!</strong> the channel: <strong>' + data.newChannel + '</strong> already exists. Please try a different one.'});
+            }
+        });
+    });
 
     //New User - join public channel
     socket.on('newUser', function(nickname, callback){

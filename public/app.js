@@ -238,15 +238,18 @@ $(function(){ //document ready
         $('#modalJoinPrivate-channelName').val('');
         $('#modalJoinPrivate-passcode').val('');
     });
-    $('#modalCreatePrivate').on('click', 'modalCreatePrivate-createbtn', function(e){
+    //Step 1: Send server request to create and change private channel
+    //Step 2: Server creates private channel and sends response
+    //Step 3: Client receives response and sends request to change channel
+    $('#modalCreatePrivate').on('click', '#modalCreatePrivate-createbtn', function(e){
         e.preventDefault();
         $('#modalCreatePrivate').modal('toggle');
-        showChannelHeader(false);
-        showChannelsTab(true);
+        showChannelHeader(true);
+        showChannelsTab(false);
         var channelName = $('#modalCreatePrivate-channelName').val();
         var passcode = $('#modalCreatePrivate-passcode').val();
-        changeChannelPrivate(channelName, passcode);
-        ('#modalCreatePrivate-channelName').val('');
+        createChannelPrivate(channelName, passcode);
+        $('#modalCreatePrivate-channelName').val('');
         $('#modalCreatePrivate-passcode').val('');
     });
 
@@ -293,6 +296,15 @@ $(function(){ //document ready
 
     function changeChannelPrivate(channelName, passcode){
         socket.emit('channelPrivate', {
+            nickname: nickname,
+            oldChannel: currentChannel,
+            newChannel: channelName,
+            passcode: passcode
+        });
+    }
+
+    function createChannelPrivate(channelName, passcode){
+        socket.emit('createChangeChannelPrivate', {
             nickname: nickname,
             oldChannel: currentChannel,
             newChannel: channelName,
