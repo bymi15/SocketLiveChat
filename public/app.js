@@ -374,4 +374,51 @@ $(function(){ //document ready
         socket.emit('doneLoadingChat', currentChannel);
     });
 
+    //JOINING PRIVATE CHANNEL VIA URL
+    var $nicknameURL = $('#nicknameURL');
+    var $channelURL = $('#channelURL');
+    var $passcodeURL = $('#passcodeURL');
+    var $btnURL = $('#joinPrivateChannelURL');
+
+    $nicknameURL.focus();
+    $nicknameURL.keyup(function(e){
+        if($nicknameURL.val().trim() != '' && $passcodeURL.val().trim() != ''){
+            $btnURL.attr('disabled', false);
+        }else{
+            $btnURL.attr('disabled', true);
+        }
+    });
+    $passcodeURL.keyup(function(e){
+        if($nicknameURL.val().trim() != '' && $passcodeURL.val().trim() != ''){
+            $btnURL.attr('disabled', false);
+        }else{
+            $btnURL.attr('disabled', true);
+        }
+    });
+
+    $btnURL.on('click', function(e){
+        e.preventDefault();
+
+        if($nicknameURL.val().trim() == '' || $passcodeURL.val().trim()  == ''){
+            return;
+        }
+
+        socket.emit('joinPrivateChannel', {nickname: $nicknameURL.val(), channelName: $channelURL.data('ref'), passcode: $passcodeURL.val()}, function(noerror, data){
+            if(noerror){
+                nickname = $nicknameURL.val();
+                $userArea.hide();
+                $messageArea.show();
+                $nicknameURL.val('');
+                $channelURL.val('');
+                $passcodeURL.val('');
+                showChannelHeader(true);
+                showChannelsTab(false);
+                currentChannel = data.channelName;
+                $('#privateChannelName').append(data.channelName + " <span style='color: white; font-size:14px;'>Hosted by <strong>" + data.creator + "</strong></span>");
+            }else{
+                $userForm.prepend('<div class="alert alert-danger alert-dismissable fade in"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + data + '</div>');
+            }
+        });
+    });
+
 });

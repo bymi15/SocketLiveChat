@@ -1,0 +1,177 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Socket Live Chat</title>
+    <!--
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">-->
+    <link href="/public/bootstrap.min.css" rel="stylesheet">
+    <link href="/public/bootstrap-select.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron text-center">
+            <h1 style="color: #00BAD5;">Socket Live Chat</h1>
+            <p>Real-time chat with socket.io created by <strong>Brian Min</strong></p>
+        </div>
+        <div id="userArea" class="row">
+            <div class="col-sm-12 col-md-8 col-md-offset-2">
+                <form id="userForm">
+                    <div class="form-group">
+                        <label>Enter nickname:</label>
+                        <input type="text" class="form-control" id="nickname">
+                        <br>
+                        <label>Enter Channel Name:</label>
+                        <input type="text" class="form-control" id="channelName">
+                        <br>
+                        <label>Enter Passcode:</label>
+                        <input type="text" class="form-control" id="passcode">
+                        <br>
+                        <button id="joinPublicChannel" class="btn btn-success btn-block" disabled="true">Join Public Channel</button>
+                        <br>
+                        <div class="btn-group btn-group-justified">
+                            <div class="btn-group"><button id="joinPrivateChannel" class="btn btn-primary" disabled="true">Join Private Channel</button></div>
+                            <div class="btn-group"><button id="createPrivateChannel" class="btn btn-warning" disabled="true">Create Private Channel</button></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="messageArea" style="display:none;" class="row">
+            <div class="col-md-6">
+                <h3 id="privateChannelName" style="color:#13B78C;"></h3>
+            </div>
+            <div class="col-md-6">
+                <div id="privateChannelButtons" class="btn-group btn-group-justified">
+                    <div class="btn-group"><button data-toggle="modal" data-target="#modalJoinPublic" id="modalBtnJoinPublic" class="btn btn-success">Join Public Channel</button></div>
+                    <div class="btn-group"><button data-toggle="modal" data-target="#modalJoinPrivate" id="modalBtnJoinPrivate" class="btn btn-primary">Join Private Channel</button></div>
+                    <div class="btn-group"><button data-toggle="modal" data-target="#modalCreatePrivate" id="modalBtnCreatePrivate" class="btn btn-warning">Create Private Channel</button></div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <ul id="channelsTab" class="nav nav-tabs" style="border-bottom:0px;"></ul>
+            </div>
+            <div class="col-md-8">
+                <div class="chat pre-scrollable" style="overflow-y: auto; margin-bottom:10px; overflow-x:hidden;" id="chat"></div>
+                <form id="messageForm">
+                    <div class="form-group">
+                        <label>Enter message:</label>
+                        <textarea class="form-control" id="message"></textarea>
+                        <br>
+                        <input type="submit" class="btn btn-primary" value="Send Message" />
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <div class="well pre-scrollable" style="overflow-y: auto;">
+                    <h3 style="margin-top: 0;">Online Users <span id="onlineUserCount"></span></h3>
+                    <ul class="list-group" id="users">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--MODALS-->
+     <div id="modalJoinPublic" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="gridSystemModalLabel">Join a public channel</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12">
+                <form>
+                    <div class="form-group">
+                        <div class="btn-group">
+                            <label>Select a channel:</label>
+                            <div>
+                                <select id="dropdownChannel" class="selectpicker"></select>
+                            </div>
+                        </div>
+                        <br><br>
+                        <button id="modalJoinPublic-joinbtn" class="btn btn-success btn-block">Join Channel</button>
+                        <br>
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div id="modalJoinPrivate" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="gridSystemModalLabel">Join a private channel</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12">
+                <form>
+                    <div class="form-group">
+                        <label>Enter Channel Name:</label>
+                        <input type="text" class="form-control" id="modalJoinPrivate-channelName">
+                        <br>
+                        <label>Enter Passcode:</label>
+                        <input type="text" class="form-control" id="modalJoinPrivate-passcode">
+                        <br>
+                        <button id="modalJoinPrivate-joinbtn" class="btn btn-primary btn-block" disabled="true">Join Channel</button>
+                        <br>
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div id="modalCreatePrivate" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="gridSystemModalLabel">Create a private channel</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12">
+                <form>
+                    <div class="form-group">
+                        <label>Enter Channel Name:</label>
+                        <input type="text" class="form-control" id="modalCreatePrivate-channelName">
+                        <br>
+                        <label>Enter Passcode:</label>
+                        <input type="text" class="form-control" id="modalCreatePrivate-passcode">
+                        <br>
+                        <button id="modalCreatePrivate-createbtn" class="btn btn-warning btn-block" disabled="true">Create Channel</button>
+                        <br>
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="/public/bootstrap-select.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="/public/app.js"></script>
+</body>
+</html>

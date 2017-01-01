@@ -3,6 +3,7 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 var moment = require('moment');
+var mustacheExpress = require('mustache-express');
 
 var db = require('./models/db');
 Message = require('./models/messages');
@@ -15,55 +16,21 @@ defaultChannel = "General";
 
 app.use('/public', express.static(__dirname + '/public'));
 
+// Register '.html' extension with The Mustache Express
+app.engine('html', mustacheExpress());
+
+app.set('view engine', 'html');
+app.set('views', __dirname + '/views');
+
 server.listen(process.env.PORT || 3000);
 
 console.log('server listening on port 3000...');
 
-app.get('/', function(req, res){
-    res.sendFile(__dirname + '/public/index.html');
-});
+//ROUTES
+require('./routes')(app);
 
-//TESTING ROUTES
-//View the chat history of a channel
-app.get('/chathistory', function(req, res) {
-    if(req.query.channel === undefined){
-        Message.find().sort({date: 'desc'}).exec(function(err, data) {
-            res.json(data);
-        });
-    }else{
-        Message.find({
-            'channel': req.query.channel
-        }).sort({date: 'desc'}).exec(function(err, data) {
-            res.json(data);
-        });
-    }
-});
-
-//Clear history
-app.get('/clearhistory', function(req, res) {
-    Message.remove({}, function(){
-        res.send('chat history cleared');
-    });
-});
-
-//Private channels
-app.get('/privatechannels', function(req, res) {
-  if(req.query.channel === undefined){
-    PrivateChannel.find().sort({date: 'desc'}).exec(function(err, data) {
-        res.json(data);
-    });
-  }else{
-    PrivateChannel.find({
-        'creator': req.query.creator
-    }).sort({date: 'desc'}).exec(function(err, data) {
-        res.json(data);
-    });
-  }
-
-});
-
+//New connection
 io.sockets.on('connection', function(socket){
-
     //Disconnect
     socket.on('disconnect', function(data){
         var currentTime = moment().format("h:mm A");

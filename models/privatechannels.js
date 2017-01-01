@@ -3,7 +3,8 @@ var mongoose = require('mongoose');
 var privateChannelsSchema = mongoose.Schema({
     channelName: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     passcode: {
         type: String,
