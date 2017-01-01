@@ -1,0 +1,85 @@
+<div id="modalJoinPublic" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="gridSystemModalLabel">Join a public channel</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <form>
+              <div class="form-group">
+                <div class="btn-group">
+                  <label>Select a channel:</label>
+                  <div>
+                    <select id="dropdownChannel" class="selectpicker"></select>
+                  </div>
+                </div>
+                <br><br>
+                <button id="modalJoinPublic-joinbtn" class="btn btn-success btn-block">Join Channel</button>
+                <br>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div id="modalJoinPrivate" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="gridSystemModalLabel">Join a private channel</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <form>
+              <div class="form-group">
+                <label>Enter Channel Name:</label>
+                <input type="text" class="form-control" id="modalJoinPrivate-channelName">
+                <br>
+                <label>Enter Passcode:</label>
+                <input type="text" class="form-control" id="modalJoinPrivate-passcode">
+                <br>
+                <button id="modalJoinPrivate-joinbtn" class="btn btn-primary btn-block" disabled="true">Join Channel</button>
+                <br>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div id="modalCreatePrivate" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="gridSystemModalLabel">Create a private channel</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <form>
+              <div class="form-group">
+                <label>Enter Channel Name:</label>
+                <input type="text" class="form-control" id="modalCreatePrivate-channelName">
+                <br>
+                <label>Enter Passcode:</label>
+                <input type="text" class="form-control" id="modalCreatePrivate-passcode">
+                <br>
+                <button id="modalCreatePrivate-createbtn" class="btn btn-warning btn-block" disabled="true">Create Channel</button>
+                <br>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

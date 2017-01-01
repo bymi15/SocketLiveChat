@@ -1,0 +1,33 @@
+<div id="messageArea" style="display:none;" class="row">
+    <div class="col-md-6">
+        <h3 id="privateChannelName" style="color:#13B78C;"></h3>
+    </div>
+    <div class="col-md-6">
+        <div id="privateChannelButtons" class="btn-group btn-group-justified">
+            <div class="btn-group"><button data-toggle="modal" data-target="#modalJoinPublic" id="modalBtnJoinPublic" class="btn btn-success">Join Public Channel</button></div>
+            <div class="btn-group"><button data-toggle="modal" data-target="#modalJoinPrivate" id="modalBtnJoinPrivate" class="btn btn-primary">Join Private Channel</button></div>
+            <div class="btn-group"><button data-toggle="modal" data-target="#modalCreatePrivate" id="modalBtnCreatePrivate" class="btn btn-warning">Create Private Channel</button></div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <ul id="channelsTab" class="nav nav-tabs" style="border-bottom:0px;"></ul>
+    </div>
+    <div class="col-md-8">
+        <div class="chat pre-scrollable" style="overflow-y: auto; margin-bottom:10px; overflow-x:hidden;" id="chat"></div>
+        <form id="messageForm">
+            <div class="form-group">
+                <label>Enter message:</label>
+                <textarea class="form-control" id="message"></textarea>
+                <br>
+                <input type="submit" class="btn btn-primary" value="Send Message" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <div class="well pre-scrollable" style="overflow-y: auto;">
+            <h3 style="margin-top: 0;">Online Users <span id="onlineUserCount"></span></h3>
+            <ul class="list-group" id="users">
+            </ul>
+        </div>
+    </div>
+</div>
