@@ -22,6 +22,9 @@ app.engine('html', mustacheExpress());
 app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
 
+//ONLY FOR TESTING
+app.disable('view cache');
+
 server.listen(process.env.PORT || 3000);
 
 console.log('server listening on port 3000...');

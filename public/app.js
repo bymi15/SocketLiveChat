@@ -253,6 +253,12 @@ $(function(){ //document ready
         $('#modalCreatePrivate-passcode').val('');
     });
 
+    $('#modalButtonShareURL').on('click', function(e){
+        $('#modalShareURLtextbox').val('http://socketlivechat.herokuapp.com/channel/' + encodeURIComponent(currentChannel));
+    });
+
+    new Clipboard('#copyURLToClipboard');
+
     function showChannelsTab(bool){
         if(bool){
             $channelsTab.show();
@@ -263,8 +269,10 @@ $(function(){ //document ready
     function showChannelHeader(bool){
         if(bool){
             $('#privateChannelName').show();
+            $('#modalButtonShareURL').show();
         }else{
             $('#privateChannelName').hide();
+            $('#modalButtonShareURL').hide();
         }
     }
 

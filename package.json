@@ -9,6 +9,7 @@
   "author": "Brian Min",
   "license": "ISC",
   "dependencies": {
+    "clipboard": "^1.5.16",
     "express": "*",
     "moment": "^2.17.1",
     "mongoose": "^4.7.5",
